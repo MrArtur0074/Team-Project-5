@@ -1,4 +1,4 @@
-package com.bezkoder.springjwt.controller;
+package com.bezkoder.springjwt.controllers;
 
 import com.bezkoder.springjwt.models.Project;
 import com.bezkoder.springjwt.service.ProjectService;
