@@ -19,9 +19,7 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<List<Project>> getAllProjects() {
-        System.out.println("✅ Контроллер /api/projects вызван!");
-        List<Project> projects = projectService.getAllProjects();
-        return ResponseEntity.ok(projects);
+        return ResponseEntity.ok(projectService.getAllProjects());
     }
 
     @GetMapping("/{id}")
@@ -29,5 +27,10 @@ public class ProjectController {
         Optional<Project> project = projectService.getProjectById(id);
         return project.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+        return ResponseEntity.ok(projectService.saveProject(project));
     }
 }

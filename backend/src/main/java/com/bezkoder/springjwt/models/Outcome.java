@@ -1,27 +1,29 @@
 package com.bezkoder.springjwt.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "outcomes")
 public class Outcome {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String result; // Что получит участник проекта
+    private String description;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "project_id")
+    @JsonBackReference
     private Project project;
 
-    public Outcome() {}
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Outcome(String result, Project project) {
-        this.result = result;
-        this.project = project;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    // Геттеры и сеттеры
+    public Project getProject() { return project; }
+    public void setProject(Project project) { this.project = project; }
 }

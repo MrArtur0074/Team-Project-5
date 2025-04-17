@@ -81,7 +81,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth ->
                     auth.requestMatchers("/api/auth/**").permitAll() // 🔓 Открываем доступ к авторизации
                             .requestMatchers("/api/projects/**").permitAll() // 🔓 Открываем доступ к проектам
-                            .anyRequest().authenticated() // 🔒 Все остальные защищены
+                            .anyRequest().permitAll() // 🔒 Все остальные защищены
             );
 
     http.authenticationProvider(authenticationProvider());
