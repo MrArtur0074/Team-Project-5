@@ -1,5 +1,5 @@
 package com.bezkoder.springjwt.security;
-
+import org.springframework.http.HttpMethod;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -79,8 +79,10 @@ public class WebSecurityConfig {
             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
-                    auth.requestMatchers("/api/auth/**").permitAll() // 🔓 Открываем доступ к авторизации
-                            .requestMatchers("/api/projects/**").permitAll() // 🔓 Открываем доступ к проектам
+                    auth.requestMatchers("/api/auth/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/projects/**").authenticated()
+                            .requestMatchers(HttpMethod.POST, "/api/projects/**").hasRole("COMPANY")
+                            .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
                             .anyRequest().permitAll() // 🔒 Все остальные защищены
             );
 
