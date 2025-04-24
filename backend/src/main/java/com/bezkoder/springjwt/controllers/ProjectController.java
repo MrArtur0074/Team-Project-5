@@ -2,35 +2,32 @@ package com.bezkoder.springjwt.controllers;
 
 import com.bezkoder.springjwt.models.Project;
 import com.bezkoder.springjwt.models.User;
+import com.bezkoder.springjwt.repository.ProjectRepository;
 import com.bezkoder.springjwt.repository.UserRepository;
 import com.bezkoder.springjwt.security.services.UserDetailsImpl;
 import com.bezkoder.springjwt.service.ProjectService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ProjectController {
 
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private ProjectService projectService;
+    @Autowired private ProjectRepository projectRepository;
+    @Autowired private UserRepository userRepository;
 
     @GetMapping("/available")
     public ResponseEntity<?> getAvailableProjects(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails == null) {
             return ResponseEntity.status(401).body("Вы не авторизованы");
         }
-        List<Project> availableProjects = projectService.getAvailableProjects();
-        return ResponseEntity.ok(availableProjects);
+        return ResponseEntity.ok(projectService.getAvailableProjects());
     }
 
     @GetMapping("/taken")
@@ -74,12 +71,35 @@ public class ProjectController {
     }
 
     @PostMapping("/company/complete/{id}")
-    public ResponseEntity<?> completeProject(@PathVariable Long id,
-                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Project project = projectService.getProjectById(id).orElseThrow();
-        if (!project.getCreatedBy().getId().equals(userDetails.getId())) {
-            return ResponseEntity.status(403).body("Not your project");
-        }
-        return ResponseEntity.ok(projectService.markAsCompleted(project));
+    @PreAuthorize("hasRole('COMPANY')")
+    public ResponseEntity<?> markProjectAsCompleted(@PathVariable Long id) {
+        return ResponseEntity.ok(projectService.markAsCompleted(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createProject(@Valid @RequestBody Project project,
+                                           @AuthenticationPrincipal UserDetailsImpl currentUser) {
+        User user = new User();
+        user.setId(currentUser.getId());
+
+        project.setCreatedBy(user);
+        project.setTaken(false);
+        project.setCompleted(false);
+        project.setMustBeChecked(false);
+
+        if (project.getTechnologies() != null)
+            project.getTechnologies().forEach(t -> t.setProject(project));
+
+        if (project.getRequirements() != null)
+            project.getRequirements().forEach(r -> r.setProject(project));
+
+        if (project.getOutcomes() != null)
+            project.getOutcomes().forEach(o -> o.setProject(project));
+
+        if (project.getStack() != null)
+            project.getStack().setProject(project);
+
+        Project saved = projectRepository.save(project);
+        return ResponseEntity.ok(saved);
     }
 }

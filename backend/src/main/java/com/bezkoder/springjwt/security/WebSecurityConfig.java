@@ -1,7 +1,8 @@
 package com.bezkoder.springjwt.security;
-import org.springframework.http.HttpMethod;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -55,17 +56,16 @@ public class WebSecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  // ✅ Метод CORS теперь внутри класса
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.addAllowedOriginPattern("*"); // Разрешаем все домены
-    configuration.addAllowedMethod("*"); // Разрешаем все методы (GET, POST, etc.)
-    configuration.addAllowedHeader("*"); // Разрешаем все заголовки
-    configuration.setAllowCredentials(true); // Разрешаем использование куки и авторизационных данных
+    configuration.addAllowedOriginPattern("*");
+    configuration.addAllowedMethod("*");
+    configuration.addAllowedHeader("*");
+    configuration.setAllowCredentials(true);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/api/auth/**", configuration); // Применяем только для авторизации
+    source.registerCorsConfiguration("/**", configuration); // применяется ко всем путям
     return source;
   }
 
@@ -74,17 +74,19 @@ public class WebSecurityConfig {
     System.out.println("✅ WebSecurityConfig is being applied!");
 
     http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Включаем CORS
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth ->
-                    auth.requestMatchers("/api/auth/**").permitAll()
+                    auth
+                            .requestMatchers("/api/auth/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/projects/**").authenticated()
-                            .requestMatchers(HttpMethod.GET, "/api/projects/available").authenticated()
-                            .requestMatchers(HttpMethod.POST, "/api/projects/**").hasRole("COMPANY")
+                            .requestMatchers(HttpMethod.POST, "/api/projects/*/submit").hasRole("USER")
+                            .requestMatchers(HttpMethod.POST, "/api/projects/*/take").hasRole("USER") // ✅ доступен USER
+                            .requestMatchers(HttpMethod.POST, "/api/projects/**").hasRole("COMPANY") // ✅ доступен COMPANY
                             .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
-                            .anyRequest().permitAll() // 🔒 Все остальные защищены
+                            .anyRequest().permitAll()
             );
 
     http.authenticationProvider(authenticationProvider());

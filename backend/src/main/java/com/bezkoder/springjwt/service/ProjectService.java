@@ -1,7 +1,9 @@
 package com.bezkoder.springjwt.service;
 
-import com.bezkoder.springjwt.models.*;
+import com.bezkoder.springjwt.models.Project;
+import com.bezkoder.springjwt.models.User;
 import com.bezkoder.springjwt.repository.ProjectRepository;
+import com.bezkoder.springjwt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,9 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
@@ -66,9 +71,21 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    public Project markAsCompleted(Project project) {
+    public Project markAsCompleted(Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow();
+
+        if (project.getTakenBy() == null) {
+            throw new RuntimeException("Project was not taken");
+        }
+
         project.setCompleted(true);
         project.setMustBeChecked(false);
+
+        // Добавляем в completedProjects пользователя
+        User user = project.getTakenBy();
+        user.getCompletedProjects().add(project);
+        userRepository.save(user); // ✅ важно сохранить изменения у пользователя
+
         return projectRepository.save(project);
     }
 }
