@@ -18,6 +18,22 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
+    public List<Project> getAvailableProjects() {
+        return projectRepository.findByTakenFalse();
+    }
+
+    public List<Project> getProjectsTakenByUser(User user) {
+        return projectRepository.findByTakenBy(user);
+    }
+
+    public List<Project> getProjectsCreatedByCompany(User user) {
+        return projectRepository.findByCreatedBy(user);
+    }
+
+    public List<Project> getProjectsToCheck(User user) {
+        return projectRepository.findByCreatedByAndMustBeCheckedTrue(user);
+    }
+
     public Optional<Project> getProjectById(Long id) {
         return projectRepository.findById(id);
     }
@@ -35,6 +51,24 @@ public class ProjectService {
         if (project.getStack() != null) {
             project.getStack().setProject(project);
         }
+        return projectRepository.save(project);
+    }
+
+    public Project takeProject(Project project, User user) {
+        project.setTaken(true);
+        project.setTakenBy(user);
+        return projectRepository.save(project);
+    }
+
+    public Project submitProject(Project project, String submissionLink) {
+        project.setSubmissionLink(submissionLink);
+        project.setMustBeChecked(true);
+        return projectRepository.save(project);
+    }
+
+    public Project markAsCompleted(Project project) {
+        project.setCompleted(true);
+        project.setMustBeChecked(false);
         return projectRepository.save(project);
     }
 }
