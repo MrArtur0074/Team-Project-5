@@ -14,7 +14,7 @@ const Login = () => {
     setError('');
 
     try {
-        const response = await axios.post('http://localhost:8080/api/auth/signin', { username, password }, {
+        const response = await axios.post('http://195.58.37.54:8080/api/auth/signin', { username, password }, {
           headers: { 'Content-Type': 'application/json' }
         });
 

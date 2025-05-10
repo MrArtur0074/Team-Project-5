@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="bg-white shadow-sm rounded-lg overflow-hidden">
+    <!-- HEADER -->
+    <div class="px-6 py-8 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold text-gray-900">Project Title <!-- подставь название проекта --></h1>
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+          Intermediate <!-- подставь уровень сложности -->
+        </span>
+      </div>
+      <p class="mt-4 text-gray-600">Project description goes here <!-- подставь описание проекта --></p>
+    </div>
+
+    <!-- STATS -->
+    <div class="px-6 py-4 bg-gray-50 grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="flex items-center">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M12 8v4l3 3"></path><circle cx="12" cy="12" r="10"></circle>
+        </svg>
+        <span class="ml-2 text-sm text-gray-600">4 weeks <!-- подставь длительность --></span>
+      </div>
+      <div class="flex items-center">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M17 20h5v-2a4 4 0 00-3-3.87"></path><path d="M9 20h6"></path><circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span class="ml-2 text-sm text-gray-600">12 participants <!-- кол-во участников --></span>
+      </div>
+      <div class="flex items-center">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M3 3v18h18"></path>
+        </svg>
+        <span class="ml-2 text-sm text-gray-600">Backend <!-- тип проекта --></span>
+      </div>
+      <div class="flex items-center">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M21 12h-18"></path>
+        </svg>
+        <span class="ml-2 text-sm text-gray-600">Premium support</span>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="px-6 py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- LEFT -->
+      <div class="md:col-span-2 space-y-8">
+        <!-- Technologies -->
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Technologies Used</h2>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Node.js</span>
+            <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Express</span>
+            <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">PostgreSQL</span>
+            <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">JWT</span>
+            <!-- подставь список технологий -->
+          </div>
+        </section>
+
+        <!-- Requirements -->
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Requirements</h2>
+          <ul class="list-disc list-inside space-y-2 text-gray-600">
+            <li>Basic understanding of JavaScript</li>
+            <li>Familiarity with REST APIs</li>
+            <li>Knowledge of SQL databases</li>
+            <!-- подставь список требований -->
+          </ul>
+        </section>
+
+        <!-- Learning Outcomes -->
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Learning Outcomes</h2>
+          <ul class="list-disc list-inside space-y-2 text-gray-600">
+            <li>Design and implement RESTful APIs</li>
+            <li>Handle user authentication and authorization</li>
+            <li>Work with relational databases</li>
+            <li>Implement security best practices</li>
+            <!-- подставь learning outcomes -->
+          </ul>
+        </section>
+      </div>
+
+      <!-- RIGHT (SIDEBAR) -->
+      <div class="space-y-6">
+        <!-- БЛОК "ВЗЯТЬ ПРОЕКТ" или "СДАТЬ ПРОЕКТ" -->
+
+        <!-- Вариант 1: если проект еще не взят -->
+        <div class="bg-gray-50 rounded-lg p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Get Started</h3>
+          <button class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-200">
+            Take Project <!-- эта кнопка должна вызвать POST /api/projects/{id}/take -->
+          </button>
+          <p class="text-gray-600 text-sm mt-4">После нажатия проект станет "взятым", страница может поменять контент.</p>
+        </div>
+
+        <!-- Вариант 2: если проект уже взят -->
+        <!-- УБРАТЬ блок выше и ВСТАВИТЬ этот -->
+        <!--
+        <div class="bg-gray-50 rounded-lg p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Submit Project</h3>
+          <label for="githubLink" class="block text-sm font-medium text-gray-700 mb-2">GitHub Link</label>
+          <input type="url" id="githubLink" name="githubLink" placeholder="https://github.com/your-repo"
+                 class="w-full border border-gray-300 rounded-md px-3 py-2 mb-4">
+          <button class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors duration-200">
+            Submit Project <!-- эта кнопка должна вызвать POST /api/projects/{id}/submit -->
+          </button>
+        </div>
+        -->
+
+        <!-- HELP SECTION -->
+        <div class="bg-gray-50 rounded-lg p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Need Help?</h3>
+          <p class="text-gray-600 text-sm mb-4">Get premium support from experienced developers</p>
+          <a href="/pricing" class="text-indigo-600 hover:text-indigo-500 text-sm font-medium">Upgrade to Premium →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
