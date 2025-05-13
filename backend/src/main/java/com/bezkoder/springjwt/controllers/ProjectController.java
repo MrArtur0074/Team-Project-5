@@ -18,9 +18,14 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class ProjectController {
 
-    @Autowired private ProjectService projectService;
-    @Autowired private ProjectRepository projectRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/available")
     public ResponseEntity<?> getAvailableProjects(@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -79,6 +84,7 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<?> createProject(@Valid @RequestBody Project project,
                                            @AuthenticationPrincipal UserDetailsImpl currentUser) {
+        // Устанавливаем создателя
         User user = new User();
         user.setId(currentUser.getId());
 
@@ -87,19 +93,25 @@ public class ProjectController {
         project.setCompleted(false);
         project.setMustBeChecked(false);
 
-        if (project.getTechnologies() != null)
-            project.getTechnologies().forEach(t -> t.setProject(project));
+        // Устанавливаем связь между дочерними сущностями и проектом
+        if (project.getTechnologies() != null) {
+            project.getTechnologies().forEach(tech -> tech.setProject(project));
+        }
 
-        if (project.getRequirements() != null)
-            project.getRequirements().forEach(r -> r.setProject(project));
+        if (project.getRequirements() != null) {
+            project.getRequirements().forEach(req -> req.setProject(project));
+        }
 
-        if (project.getOutcomes() != null)
-            project.getOutcomes().forEach(o -> o.setProject(project));
+        if (project.getOutcomes() != null) {
+            project.getOutcomes().forEach(out -> out.setProject(project));
+        }
 
-        if (project.getStack() != null)
+        if (project.getStack() != null) {
             project.getStack().setProject(project);
+        }
 
-        Project saved = projectRepository.save(project);
-        return ResponseEntity.ok(saved);
+        // Сохраняем
+        Project savedProject = projectRepository.save(project);
+        return ResponseEntity.ok(savedProject);
     }
 }

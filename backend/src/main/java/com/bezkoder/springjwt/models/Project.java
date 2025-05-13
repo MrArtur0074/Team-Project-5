@@ -13,16 +13,13 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
+    private String title; // ✅ было name — теперь правильно
+    private String type;  // ✅ добавить тип (Backend/Frontend/etc.)
     private String description;
-
     private String githubLink;
 
     private boolean taken;
-
     private boolean completed;
-
     private boolean mustBeChecked;
 
     @Column(columnDefinition = "TEXT")
@@ -50,61 +47,49 @@ public class Project {
     @OneToOne(mappedBy = "project", cascade = CascadeType.ALL)
     private Stack stack;
 
-    public Project() {}
-
+    // --- Геттеры и сеттеры ---
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
-    public String getName() { return name; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public void setName(String name) { this.name = name; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
     public String getDescription() { return description; }
-
     public void setDescription(String description) { this.description = description; }
 
     public String getGithubLink() { return githubLink; }
-
     public void setGithubLink(String githubLink) { this.githubLink = githubLink; }
 
     public boolean isTaken() { return taken; }
-
     public void setTaken(boolean taken) { this.taken = taken; }
 
     public boolean isCompleted() { return completed; }
-
     public void setCompleted(boolean completed) { this.completed = completed; }
 
     public boolean isMustBeChecked() { return mustBeChecked; }
-
     public void setMustBeChecked(boolean mustBeChecked) { this.mustBeChecked = mustBeChecked; }
 
     public String getSubmissionLink() { return submissionLink; }
-
     public void setSubmissionLink(String submissionLink) { this.submissionLink = submissionLink; }
 
     public User getTakenBy() { return takenBy; }
-
     public void setTakenBy(User takenBy) { this.takenBy = takenBy; }
 
     public User getCreatedBy() { return createdBy; }
-
     public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
 
     public List<Technology> getTechnologies() { return technologies; }
-
     public void setTechnologies(List<Technology> technologies) { this.technologies = technologies; }
 
     public List<Requirement> getRequirements() { return requirements; }
-
     public void setRequirements(List<Requirement> requirements) { this.requirements = requirements; }
 
     public List<Outcome> getOutcomes() { return outcomes; }
-
     public void setOutcomes(List<Outcome> outcomes) { this.outcomes = outcomes; }
 
     public Stack getStack() { return stack; }
-
     public void setStack(Stack stack) { this.stack = stack; }
 }

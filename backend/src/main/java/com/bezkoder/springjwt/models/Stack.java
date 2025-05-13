@@ -10,19 +10,23 @@ public class Stack {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String level;
+    private String details;
 
     @OneToOne
     @JoinColumn(name = "project_id", unique = true)
     @JsonBackReference
     private Project project;
 
-    // Геттеры и сеттеры
+    // --- Геттеры и сеттеры ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getLevel() { return level; }
+    public void setLevel(String level) { this.level = level; }
+
+    public String getDetails() { return details; }
+    public void setDetails(String details) { this.details = details; }
 
     public Project getProject() { return project; }
     public void setProject(Project project) { this.project = project; }
