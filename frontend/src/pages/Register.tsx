@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link ,useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, Code } from 'lucide-react';
 import axios from 'axios';
+import { API_URL } from '../api/const.ts';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -17,15 +18,15 @@ const Register = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/signup', formData, {
+      const response = await axios.post(`${API_URL}/api/auth/signup`, formData, {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      if (response.status === 200){
+
+      if (response.status === 200) {
         navigate('/');
       }
     } catch (err) {
-      console.error('Registration error:', err);
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     }
   };

@@ -1,39 +1,52 @@
 import { useState } from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Mail, Lock } from 'lucide-react';
+import { API_URL } from '../api/const';
 
-const Login = () => {
+const Login = ({ onLoginSuccess }: { onLoginSuccess: () => void }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setError('');
 
     try {
-        const response = await axios.post('http://195.58.37.54:8080/api/auth/signin', { username, password }, {
-          headers: { 'Content-Type': 'application/json' }
-        });
+      const response = await axios.post(`${API_URL}/api/auth/signin`, { username, password }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
 
-        // Сохраняем данные корректно
-        localStorage.setItem("username", response.data.username);
-        localStorage.setItem("accessToken", response.data.accessToken); // Исправлено
-        localStorage.setItem('login' , true)
-        navigate('/home')
+      // Сохраняем данные корректно
+      localStorage.setItem("username", response.data.username);
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("roles", response.data.roles);
+      localStorage.setItem('login', 'true')
 
-        console.log("Saved to localStorage:", {
-          username: localStorage.getItem("username"),
-          accessToken: localStorage.getItem("accessToken")
-        });
+      onLoginSuccess();
 
-    } catch (err) {
-      console.error('Login error:', err);
+      switch (response.data.roles[0]) {
+        case 'ROLE_ADMIN':
+          navigate('/admin');
+          break;
+        case 'ROLE_USER':
+          navigate('/profile');
+          break;
+        case 'ROLE_COMPANY':
+          navigate('/company');
+          break
+
+        default:
+          navigate('/');
+          break;
+      }
+
+    } catch (err: any) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     }
-};
+  };
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -53,7 +66,7 @@ const Login = () => {
           <div className="rounded-md shadow-sm -space-y-px">
             <div className="relative">
               <label htmlFor="email-address" className="sr-only">
-              Name
+                Name
               </label>
               <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <input

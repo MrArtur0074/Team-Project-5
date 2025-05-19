@@ -38,23 +38,18 @@ const Footer = () => {
                   About
                 </Link>
               </li>
-              <li>
-                <Link to="/contact" className="text-base text-gray-500 hover:text-gray-900">
-                  Contact
-                </Link>
-              </li>
             </ul>
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Follow Us</h3>
             <div className="mt-4 flex space-x-6">
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <a href="github.com/Nurdanchik" className="text-gray-400 hover:text-gray-500">
                 <Github className="h-6 w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <a href="github.com/Nurdanchik" className="text-gray-400 hover:text-gray-500">
                 <Twitter className="h-6 w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <a href="github.com/Nurdanchik" className="text-gray-400 hover:text-gray-500">
                 <Linkedin className="h-6 w-6" />
               </a>
             </div>

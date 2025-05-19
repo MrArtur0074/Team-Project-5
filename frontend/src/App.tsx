@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, BrowserRouter } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -10,6 +10,12 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Pricing from './pages/Pricing';
 import About from './pages/About';
+import Profile from './pages/Profile';
+import Admin from './pages/Admin';
+import Company from './pages/Company';
+import ToCheck from './pages/ToCheck';
+import TakenProjects from './pages/TakenProjects';
+import { Toaster } from 'react-hot-toast';
 
 const pageTransition = {
   in: { opacity: 1, x: 0, transition: { duration: 0.5 } },
@@ -18,9 +24,8 @@ const pageTransition = {
 
 function AppContent() {
   const location = useLocation();
-  const userLogin = localStorage.getItem('login')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const userLogin = localStorage.getItem('login');
   useEffect(() => {
     if (userLogin) {
       setIsAuthenticated(true)
@@ -29,14 +34,35 @@ function AppContent() {
     }
   }, [userLogin])
 
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {isAuthenticated ? (
         <>
+          <Toaster />
           <Navbar />
           <main className="flex-grow">
-            <AnimatePresence exitBeforeEnter>
+          <AnimatePresence mode="wait">
               <Routes location={location} key={location.pathname}>
+                <Route
+                    path="/taken"
+                    element={
+                      <motion.div initial="out" animate="in" exit="out" variants={pageTransition}>
+                        <TakenProjects />
+                      </motion.div>
+                    }
+                  />
+                <Route
+                  path="/toCheck"
+                  element={
+                    <motion.div initial="out" animate="in" exit="out" variants={pageTransition}>
+                      <ToCheck />
+                    </motion.div>
+                  }
+                />
                 <Route
                   path="/"
                   element={
@@ -50,6 +76,14 @@ function AppContent() {
                   element={
                     <motion.div initial="out" animate="in" exit="out" variants={pageTransition}>
                       <Projects />
+                    </motion.div>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <motion.div initial="out" animate="in" exit="out" variants={pageTransition}>
+                      <Profile />
                     </motion.div>
                   }
                 />
@@ -77,6 +111,22 @@ function AppContent() {
                     </motion.div>
                   }
                 />
+                <Route
+                  path="/admin"
+                  element={
+                    <motion.div initial="out" animate="in" exit="out" variants={pageTransition}>
+                      <Admin />
+                    </motion.div>
+                  }
+                />
+                <Route
+                  path="/company"
+                  element={
+                    <motion.div initial="out" animate="in" exit="out" variants={pageTransition}>
+                      <Company />
+                    </motion.div>
+                  }
+                />
               </Routes>
             </AnimatePresence>
           </main>
@@ -89,7 +139,7 @@ function AppContent() {
               path="/"
               element={
                 <motion.div initial="out" animate="in" exit="out" variants={pageTransition}>
-                  <Login />
+                  <Login onLoginSuccess={handleLoginSuccess} />
                 </motion.div>
               }
             />
@@ -112,9 +162,9 @@ function AppContent() {
 // Внешний компонент, который содержит Router
 function App() {
   return (
-    <Router>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AppContent />
-    </Router>
+    </BrowserRouter>
   );
 }
 
